@@ -1,0 +1,9 @@
+#ifndef MINI_ASYNC_SIMPLE_INCLUDE_ASYNC_SIMPLE_BASE_MACRO_HPP_
+#define MINI_ASYNC_SIMPLE_INCLUDE_ASYNC_SIMPLE_BASE_MACRO_HPP_
+
+#define LIKELY [[likely]]
+#define UNLIKELY [[unlikely]]
+
+#define FORCE_INLINE __attribute__((__always_inline__)) inline
+
+#endif //MINI_ASYNC_SIMPLE_INCLUDE_ASYNC_SIMPLE_BASE_MACRO_HPP_
