@@ -20,6 +20,8 @@ target_sources(async_simple
             ${AS_INC_DIR}/async_simple/base/try.hpp
             ${AS_INC_DIR}/async_simple/base/try_variant.hpp
             ${AS_INC_DIR}/async_simple/base/move_wrapper.hpp
+            ${AS_INC_DIR}/async_simple/executor/io_executor.hpp
+            ${AS_INC_DIR}/async_simple/executor/executor.hpp
         PRIVATE
             ${AS_SRC_DIR}/as.cpp
         )
