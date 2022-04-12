@@ -1,0 +1,7 @@
+#ifndef MINI_ASYNC_SIMPLE_TEST_ASYNC_SIMPLE_TEST_HPP_
+#define MINI_ASYNC_SIMPLE_TEST_ASYNC_SIMPLE_TEST_HPP_
+
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+
+#endif //MINI_ASYNC_SIMPLE_TEST_ASYNC_SIMPLE_TEST_HPP_

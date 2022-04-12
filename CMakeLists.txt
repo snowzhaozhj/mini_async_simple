@@ -5,6 +5,10 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(AS_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(AS_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(AS_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
+set(GTEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/googletest)
+
+add_subdirectory(${GTEST_DIR})
 
 add_library(async_simple)
 target_sources(async_simple
@@ -21,3 +25,18 @@ target_sources(async_simple
 target_include_directories(async_simple
         PUBLIC
             ${AS_INC_DIR})
+
+add_executable(async_simple_test
+        ${AS_TEST_DIR}/async_simple_test.hpp
+        ${AS_TEST_DIR}/async_simple_test.cpp
+        ${AS_TEST_DIR}/base/try_test.cpp
+        ${AS_TEST_DIR}/base/try_variant_test.cpp
+        )
+target_include_directories(async_simple_test
+        PRIVATE
+            ${AS_TEST_DIR})
+target_link_libraries(async_simple_test
+        PRIVATE
+            async_simple
+            gtest
+            gmock)
