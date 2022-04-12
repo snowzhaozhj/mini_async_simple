@@ -14,58 +14,58 @@ namespace async_simple {
 template<typename T>
 class Try : noncopyable {
   enum class InnerType {
-    Value,
-    Exception,
-    Nothing,
+    kValue,
+    kException,
+    kNothing,
   };
  public:
-  Try() : inner_type_(InnerType::Nothing) {}
+  Try() : inner_type_(InnerType::kNothing) {}
   ~Try() { Destroy(); }
 
   Try(Try &&other) : inner_type_(other.inner_type_) {
-    if (inner_type_ == InnerType::Value) {
+    if (inner_type_ == InnerType::kValue) {
       new(&value_) T(std::move(other.value_));
-    } else if (inner_type_ == InnerType::Exception) {
+    } else if (inner_type_ == InnerType::kException) {
       new(&exception_) std::exception_ptr(other.exception_);
     }
   }
   template<typename T2 = T>
   Try(std::enable_if_t<std::is_same_v<T2, Unit>, const Try<void> &> other) {
     if (other.HasException()) {
-      inner_type_ = InnerType::Exception;
+      inner_type_ = InnerType::kException;
       new(&exception_) std::exception_ptr(other.exception_);
     } else {
-      inner_type_ = InnerType::Value;
+      inner_type_ = InnerType::kValue;
       new(&value_) T();
     }
   }
-  Try(const T &val) : inner_type_(InnerType::Value), value_(val) {}
-  Try(T &&val) : inner_type_(InnerType::Value), value_(std::move(val)) {}
-  Try(std::exception_ptr exception) : inner_type_(InnerType::Exception), exception_(std::move(exception)) {}
+  Try(const T &val) : inner_type_(InnerType::kValue), value_(val) {}
+  Try(T &&val) : inner_type_(InnerType::kValue), value_(std::move(val)) {}
+  Try(std::exception_ptr exception) : inner_type_(InnerType::kException), exception_(std::move(exception)) {}
 
   Try &operator=(Try &&other) {
     if (&other == this) return *this;
     Destroy();
     inner_type_ = other.inner_type_;
-    if (inner_type_ == InnerType::Value) {
+    if (inner_type_ == InnerType::kValue) {
       new(&value_) T(std::move(other.value_));
-    } else if (inner_type_ == InnerType::Exception) {
+    } else if (inner_type_ == InnerType::kException) {
       new(&exception_) std::exception_ptr(other.exception_);
     }
     return *this;
   }
   Try &operator=(const std::exception_ptr &exception) {
-    if (inner_type_ == InnerType::Exception && exception == exception_) {
+    if (inner_type_ == InnerType::kException && exception == exception_) {
       return *this;
     }
     Destroy();
-    inner_type_ = InnerType::Exception;
+    inner_type_ = InnerType::kException;
     new(&exception_) std::exception_ptr(exception);
     return *this;
   }
 
-  [[nodiscard]] bool Available() const { return inner_type_ != InnerType::Nothing; }
-  [[nodiscard]] bool HasException() const { return inner_type_ == InnerType::Exception; }
+  [[nodiscard]] bool Available() const { return inner_type_ != InnerType::kNothing; }
+  [[nodiscard]] bool HasException() const { return inner_type_ == InnerType::kException; }
   const T &Value() const &{
     CheckHoldsValue();
     return value_;
@@ -84,25 +84,25 @@ class Try : noncopyable {
   }
 
   void SetException(const std::exception_ptr &exception) {
-    if (inner_type_ == InnerType::Exception && exception_ == exception) {
+    if (inner_type_ == InnerType::kException && exception_ == exception) {
       return;
     }
     Destroy();
-    inner_type_ = InnerType::Exception;
+    inner_type_ = InnerType::kException;
     new(&exception_) std::exception_ptr(exception);
   }
   std::exception_ptr GetException() {
-    LOGIC_ASSERT(inner_type_ == InnerType::Exception, "Try object do not have an error");
+    LOGIC_ASSERT(inner_type_ == InnerType::kException, "Try object do not have an error");
     return exception_;
   }
 
  private:
   FORCE_INLINE void CheckHoldsValue() const {
-    if (inner_type_ == InnerType::Value) LIKELY {
+    if (inner_type_ == InnerType::kValue) LIKELY {
       return;
-    } else if (inner_type_ == InnerType::Exception) {
+    } else if (inner_type_ == InnerType::kException) {
       std::rethrow_exception(exception_);
-    } else if (inner_type_ == InnerType::Nothing) {
+    } else if (inner_type_ == InnerType::kNothing) {
       throw std::logic_error("Try object is empty");
     } else {
       ASSERT(false);
@@ -110,12 +110,12 @@ class Try : noncopyable {
   }
 
   void Destroy() {
-    if (inner_type_ == InnerType::Value) {
+    if (inner_type_ == InnerType::kValue) {
       value_.~T();
-    } else if (inner_type_ == InnerType::Exception) {
+    } else if (inner_type_ == InnerType::kException) {
       exception_.~exception_ptr();
     }
-    inner_type_ = InnerType::Nothing;
+    inner_type_ = InnerType::kNothing;
   }
 
   friend Try<Unit>;
