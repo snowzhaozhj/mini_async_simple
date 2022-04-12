@@ -28,8 +28,9 @@ class TryV : noncopyable {
       value_ = T{};
     }
   }
-  TryV(const value_type &value) : value_(value) {}
-  TryV(value_type &&value) : value_(std::move(value)) {}
+  TryV(const T &value) : value_(value) {}
+  TryV(T &&value) : value_(std::move(value)) {}
+  TryV(std::exception_ptr exception) : value_(exception) {}
 
   TryV &operator=(TryV &&other) {
     if (&other != this) {
@@ -37,8 +38,7 @@ class TryV : noncopyable {
     }
     return *this;
   }
-  // 和Try相比，支持了对于T的赋值运算符
-  TryV &operator=(const value_type &value) {
+  TryV &operator=(const std::exception_ptr &value) {
     value_ = value;
     return *this;
   }

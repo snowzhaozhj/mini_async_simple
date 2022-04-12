@@ -46,6 +46,7 @@ class Try : noncopyable {
   Try &operator=(Try &&other) {
     if (&other == this) return *this;
     Destroy();
+    inner_type_ = other.inner_type_;
     if (inner_type_ == InnerType::Value) {
       new(&value_) T(std::move(other.value_));
     } else if (inner_type_ == InnerType::Exception) {
