@@ -28,6 +28,7 @@ target_include_directories(async_simple
 
 add_executable(async_simple_test
         ${AS_TEST_DIR}/async_simple_test.hpp
+        ${AS_TEST_DIR}/common.hpp
         ${AS_TEST_DIR}/async_simple_test.cpp
         ${AS_TEST_DIR}/base/try_test.cpp
         ${AS_TEST_DIR}/base/try_variant_test.cpp

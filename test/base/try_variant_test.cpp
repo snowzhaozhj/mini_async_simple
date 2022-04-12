@@ -1,40 +1,11 @@
 #include <async_simple/base/try_variant.hpp>
 
 #include "async_simple_test.hpp"
-
-class TryVTest : public testing::Test {};
+#include "common.hpp"
 
 namespace async_simple {
 
-namespace {
-
-enum DummyState : int {
-  CONSTRUCTED = 1,
-  DESTRUCTED = 2,
-};
-
-struct Dummy {
-  Dummy() = default;
-  Dummy(int *state_) : state(state_) {
-    if (state) {
-      *state |= CONSTRUCTED;
-    }
-  }
-  Dummy(Dummy &&other) : state(other.state) { other.state = nullptr; }
-  Dummy &operator=(Dummy &&other) {
-    std::swap(other.state, state);
-    return *this;
-  }
-  ~Dummy() {
-    if (state) {
-      *state |= DESTRUCTED;
-      state = nullptr;
-    }
-  }
-  int *state = nullptr;
-};
-
-} // anonymous namespace
+class TryVTest : public testing::Test {};
 
 TEST_F(TryVTest, testSimpleProcess) {
   TryV<int> v0(1);
