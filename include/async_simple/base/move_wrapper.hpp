@@ -26,7 +26,7 @@ class MoveWrapper {
   const T &Get() const { return value_; }
 
  private:
-  T value_;
+  mutable T value_;
 };
 
 } // namespace async_simple
