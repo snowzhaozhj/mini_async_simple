@@ -45,6 +45,8 @@ add_executable(async_simple_test
         ${AS_TEST_DIR}/async_simple_test.cpp
         ${AS_TEST_DIR}/base/try_test.cpp
         ${AS_TEST_DIR}/base/try_variant_test.cpp
+        ${AS_TEST_DIR}/sync/future_state_test.cpp
+        ${AS_TEST_DIR}/sync/future_test.cpp
         )
 target_include_directories(async_simple_test
         PRIVATE
