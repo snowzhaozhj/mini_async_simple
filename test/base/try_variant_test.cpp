@@ -7,7 +7,7 @@ namespace async_simple {
 
 class TryVTest : public testing::Test {};
 
-TEST_F(TryVTest, testSimpleProcess) {
+TEST_F(TryVTest, TestSimpleProcess) {
   TryV<int> v0(1);
   ASSERT_EQ(1, v0.Value());
 
@@ -51,7 +51,7 @@ TEST_F(TryVTest, testSimpleProcess) {
   ASSERT_EQ(100, emptyV.Value());
 }
 
-TEST_F(TryVTest, testClass) {
+TEST_F(TryVTest, TestClass) {
   int state0 = 0;
   TryV<Dummy> v0{Dummy(&state0)};
   EXPECT_TRUE(v0.Available());
@@ -65,7 +65,7 @@ TEST_F(TryVTest, testClass) {
   EXPECT_TRUE(state0 & DESTRUCTED);
 }
 
-TEST_F(TryVTest, testVoid) {
+TEST_F(TryVTest, TestVoid) {
   TryV<void> v;
   bool hasException = false;
   std::exception_ptr error;
