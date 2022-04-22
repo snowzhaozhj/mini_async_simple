@@ -27,6 +27,7 @@ target_sources(async_simple
             ${AS_INC_DIR}/async_simple/sync/local_state.hpp
             ${AS_INC_DIR}/async_simple/sync/future.hpp
             ${AS_INC_DIR}/async_simple/sync/promise.hpp
+            ${AS_INC_DIR}/async_simple/sync/future_helper.hpp
         PRIVATE
             ${AS_SRC_DIR}/as.cpp
         )

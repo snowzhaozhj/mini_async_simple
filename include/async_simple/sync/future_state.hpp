@@ -79,7 +79,7 @@ class FutureState : noncopyable {
         force_scheduled(false),
         executor_(nullptr),
         context_(Executor::kNullContext) {}
-  ~FutureState() = default;
+  ~FutureState() {}
 
   [[nodiscard]] bool HasResult() const noexcept {
     constexpr auto allow = detail::State::kDone | detail::State::kOnlyResult;
@@ -192,6 +192,7 @@ class FutureState : noncopyable {
                                            detail::State::kDone,
                                            std::memory_order_release)) {
           ScheduleContinuation(true);
+          return;
         }
         [[fallthrough]];
       default:
@@ -228,7 +229,7 @@ class FutureState : noncopyable {
         options.prompt = !force_scheduled;
         ret = executor_->Checkin([ref = std::move(guard)]() mutable {
           auto fs = ref.GetFutureState();
-          fs->continuation(std::move(fs->try_value_));
+          fs->continuation_(std::move(fs->try_value_));
         }, context_, options);
       }
       if (!ret) {

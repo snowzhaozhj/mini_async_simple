@@ -41,7 +41,7 @@ class Promise {
 
   Promise &operator=(Promise &&other) {
     shared_state_ = std::exchange(other.shared_state_, nullptr);
-    has_future_ = std::exchange(other.has_future_);
+    has_future_ = std::exchange(other.has_future_, false);
     return *this;
   }
 

@@ -18,7 +18,7 @@ class Future : noncopyable {
       shared_state_->AttachOne();
     }
   }
-  Future(Try<T> &&t) : shared_state_(nullptr) {}
+  Future(Try<T> &&t) : shared_state_(nullptr), local_state_(std::move(t)) {}
 
   ~Future() {
     if (shared_state_) {
@@ -106,7 +106,7 @@ class Future : noncopyable {
     auto future = promise.GetFuture();
     shared_state_->SetExecutor(nullptr);  // 下一个continuation是简单的，直接立即执行
     std::binary_semaphore sem(0);
-    shared_state_->SetContinuation([&sem, p = std::move(promise)](Try<T> &&t) {
+    shared_state_->SetContinuation([&sem, p = std::move(promise)](Try<T> &&t) mutable {
       p.SetValue(std::move(t));
       sem.release();
     });
@@ -144,7 +144,7 @@ class Future : noncopyable {
   template<typename Clazz>
   static decltype(auto) GetTry(Clazz &self) {
     LOGIC_ASSERT(self.Valid(), "Future is broken");
-    LOGIC_ASSERT(self.local_state_.HasResult() || self.shared_state->HasResult(),
+    LOGIC_ASSERT(self.local_state_.HasResult() || self.shared_state_->HasResult(),
                  "Future is not ready");
     if (self.shared_state_) {
       return self.shared_state_->GetTry();
@@ -176,13 +176,13 @@ class Future : noncopyable {
     auto new_future = promise.GetFuture();
     new_future.SetExecutor(shared_state_->GetExecutor());
     shared_state_->SetContinuation([p = std::move(promise),
-                                       f = std::forward<F>(func)](Try<T> &&t) {
+                                       f = std::forward<F>(func)](Try<T> &&t) mutable {
       if (!R::is_try && t.HasException()) {
         p.SetException(t.GetException());
       } else {
         try {
           auto f2 = f(std::move(t));
-          f2.SetContinuation([pm = std::move(p)](Try<T2> &&t2) {
+          f2.SetContinuation([pm = std::move(p)](Try<T2> &&t2) mutable {
             pm.SetValue(std::move(t2));
           });
         } catch (...) {
@@ -201,7 +201,7 @@ class Future : noncopyable {
     using T2 = typename R::ReturnsFuture::Inner;
 
     if (!shared_state_) {
-      Future<T2> new_future = std::forward<F>(func)(std::move(local_state_.GetTry()));
+      Future<T2> new_future(MakeTryCall(std::forward<F>(func), std::move(local_state_.GetTry())));
       new_future.SetExecutor(local_state_.GetExecutor());
       return new_future;
     }
@@ -210,7 +210,7 @@ class Future : noncopyable {
     auto new_future = promise.GetFuture();
     new_future.SetExecutor(shared_state_->GetExecutor());
     shared_state_->SetContinuation([p = std::move(promise),
-                                       f = std::forward<F>(func)](Try<T> &&t) {
+                                       f = std::forward<F>(func)](Try<T> &&t) mutable {
       if (!R::is_try && t.HasException()) {
         p.SetException(t.GetException());
       } else {
