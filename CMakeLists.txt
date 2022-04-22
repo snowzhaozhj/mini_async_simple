@@ -24,6 +24,8 @@ target_sources(async_simple
             ${AS_INC_DIR}/async_simple/util/thread_pool.hpp
             ${AS_INC_DIR}/async_simple/executor/io_executor.hpp
             ${AS_INC_DIR}/async_simple/executor/executor.hpp
+            ${AS_INC_DIR}/async_simple/executor/simple_io_executor.hpp
+            ${AS_INC_DIR}/async_simple/executor/simple_executor.hpp
             ${AS_INC_DIR}/async_simple/sync/future_trait.hpp
             ${AS_INC_DIR}/async_simple/sync/future_state.hpp
             ${AS_INC_DIR}/async_simple/sync/local_state.hpp

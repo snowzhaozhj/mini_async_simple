@@ -120,10 +120,9 @@ class Executor::Awaiter {
 
   template<typename PromiseType>
   void await_suspend(std::coroutine_handle<PromiseType> continuation) {
-    auto func = [continuation]() mutable {
+    executor_->Schedule([continuation]() mutable {
       continuation.resume();
-    };
-    executor_->Schedule(func);
+    });
   }
 
   void await_resume() const noexcept {}
@@ -140,7 +139,7 @@ class Executor::Awaitable {
   Executor *executor_;
 };
 
-Executor::Awaitable Executor::Schedule() {
+inline Executor::Awaitable Executor::Schedule() {
   return {this};
 }
 
@@ -153,10 +152,9 @@ class Executor::TimeAwaiter {
 
   template<typename PromiseType>
   void await_suspend(std::coroutine_handle<PromiseType> continuation) {
-    auto func = [continuation]() mutable {
+    executor_->Schedule([continuation]() mutable {
       continuation.resume();
-    };
-    executor_->Schedule(func, duration_);
+    }, duration_);
   }
 
   void await_resume() const noexcept {}
@@ -177,7 +175,7 @@ class Executor::TimeAwaitable {
   Executor::Duration duration_;
 };
 
-Executor::TimeAwaitable Executor::ScheduleAfter(Executor::Duration duration) {
+inline Executor::TimeAwaitable Executor::ScheduleAfter(Executor::Duration duration) {
   return {this, duration};
 }
 
