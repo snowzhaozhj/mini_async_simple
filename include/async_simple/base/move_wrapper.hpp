@@ -17,7 +17,7 @@ class MoveWrapper {
   MoveWrapper(T &&value) : value_(std::move(value)) {}
 
   MoveWrapper(const MoveWrapper &other) : value_(std::move(other.value_)) {}
-  MoveWrapper(MoveWrapper &&other) : value_(std::move(other)) {}
+  MoveWrapper(MoveWrapper &&other) : value_(std::move(other.value_)) {}
 
   MoveWrapper &operator=(const MoveWrapper) = delete;
   MoveWrapper &operator=(MoveWrapper &&) = delete;
