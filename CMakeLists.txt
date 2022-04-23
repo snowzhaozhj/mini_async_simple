@@ -32,6 +32,7 @@ target_sources(async_simple
             ${AS_INC_DIR}/async_simple/sync/future.hpp
             ${AS_INC_DIR}/async_simple/sync/promise.hpp
             ${AS_INC_DIR}/async_simple/sync/future_helper.hpp
+            ${AS_INC_DIR}/async_simple/coro/coro_concept.hpp
         PRIVATE
             ${AS_SRC_DIR}/as.cpp
         )
