@@ -37,6 +37,10 @@ target_sources(async_simple
             ${AS_INC_DIR}/async_simple/coro/ready_awaiter.hpp
             ${AS_INC_DIR}/async_simple/coro/future_awaiter.hpp
             ${AS_INC_DIR}/async_simple/coro/count_event.hpp
+            ${AS_INC_DIR}/async_simple/coro/lazy.hpp
+            ${AS_INC_DIR}/async_simple/coro/sleep.hpp
+            ${AS_INC_DIR}/async_simple/coro/via_coroutine.hpp
+            ${AS_INC_DIR}/async_simple/coro/collect.hpp
         PRIVATE
             ${AS_SRC_DIR}/as.cpp
         )
