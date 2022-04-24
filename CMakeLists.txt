@@ -51,11 +51,16 @@ target_include_directories(async_simple
 add_executable(async_simple_test
         ${AS_TEST_DIR}/async_simple_test.hpp
         ${AS_TEST_DIR}/common.hpp
+        ${AS_TEST_DIR}/scoped_bench.hpp
         ${AS_TEST_DIR}/async_simple_test.cpp
         ${AS_TEST_DIR}/base/try_test.cpp
         ${AS_TEST_DIR}/base/try_variant_test.cpp
         ${AS_TEST_DIR}/sync/future_state_test.cpp
         ${AS_TEST_DIR}/sync/future_test.cpp
+        ${AS_TEST_DIR}/coro/future_awaiter_test.cpp
+        ${AS_TEST_DIR}/coro/lazy_test.cpp
+        ${AS_TEST_DIR}/coro/sleep_test.cpp
+        ${AS_TEST_DIR}/coro/via_coroutine_test.cpp
         )
 target_include_directories(async_simple_test
         PRIVATE
