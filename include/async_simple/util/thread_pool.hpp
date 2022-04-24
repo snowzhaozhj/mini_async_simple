@@ -27,8 +27,8 @@ class ThreadPool {
         queues_(thread_num_),
         enable_work_steal_(enable_work_steal),
         stop_(false) {
-    threads_.reserve(thread_num);
-    for (int i = 0; i < thread_num; ++i) {
+    threads_.reserve(thread_num_);
+    for (int i = 0; i < thread_num_; ++i) {
       threads_.emplace_back(&ThreadPool::WorkerThreadMain, this, i);
     }
   }
@@ -52,7 +52,7 @@ class ThreadPool {
     }
     if (id == -1) {
       if (enable_work_steal_) {
-        WorkItem work_item{true, std::move(fn)};
+        WorkItem work_item{true, fn};
         for (int n = 0; n < thread_num_ * 2; ++n) {
           if (queues_.at(n % thread_num_).TryPush(work_item)) {
             return kErrorNone;

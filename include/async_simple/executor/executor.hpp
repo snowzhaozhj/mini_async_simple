@@ -105,7 +105,7 @@ class Executor : noncopyable {
     std::thread([this, f = std::move(func), duration] {
       std::this_thread::sleep_for(duration);
       Schedule(f);
-    });
+    }).detach();
   }
 };
 

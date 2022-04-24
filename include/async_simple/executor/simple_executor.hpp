@@ -11,7 +11,7 @@ class SimpleExecutor : public Executor {
   static constexpr int64_t kContextMask = 0x40000000;
 
  public:
-  explicit SimpleExecutor(std::size_t thread_num) {
+  explicit SimpleExecutor(std::size_t thread_num) : pool_(thread_num) {
     io_executor_.Init();
   }
   ~SimpleExecutor() {
